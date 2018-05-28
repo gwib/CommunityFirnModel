@@ -1,5 +1,9 @@
 *.pyc
 *.nc
+*.mat
+
+.ipynb_checkpoints/
+
 code/gasmodel/Results/conc_out.csv
 
 code/gasmodel/Results/ESS524_fig1.eps
