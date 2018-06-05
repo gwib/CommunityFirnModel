@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt 
 import h5py as h5
 import os
-import sys
 import numpy as np
 import scipy as sp
 import pickle
 import csv
 import matplotlib.gridspec as gridspec
+import pandas as pd
 
 def densityPlotSpin(rfolder,rfile):
 
@@ -123,9 +123,9 @@ for m in models:
     
 experiments = ['exp'+str(x) for x in range(1,7)]
 
-def plotDIPForExperiments(rfolder = 'CFMexperiments'):
+def plotDIPForExperiments(rfolder = 'CFMexperiments', rlist=experiments):
     
-    for e in experiments:
+    for e in rlist:
         plt.figure()
         for m in models:
             rfile = 'CFM'+e+"results"+m+".hdf5"
@@ -147,16 +147,19 @@ def plotDIPForExperiments(rfolder = 'CFMexperiments'):
             plt.show()
     
 
-def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2'):
-    for e in experiments:
-        if e in ['exp1', 'exp2', 'exp3']:
-            bDotFile = 'bDot_const.csv'
-            tskinFile = 'tskin_'+e+'.csv'
-        
-        else:
-            bDotFile = 'bDot_'+e+'.csv'
-            tskinFile = 'tskin_const.csv'
+def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTemp='tskin', rlist=experiments):
+    for e in rlist:
+        if rlist==experiments:
+            if e in ['exp1', 'exp2', 'exp3']:
+                bDotFile = inSMB+'_const.csv'
+                tskinFile = inTemp+'_'+e+'.csv'
             
+            else:
+                bDotFile = inSMB+'_'+e+'.csv'
+                tskinFile = inTemp+'_const.csv'
+        else:
+            bDotFile = inSMB+e+'.csv'
+            tskinFile = inTemp+e+'.csv'
         fnbDot = os.path.join(infolder,bDotFile)
         fntskin = os.path.join(infolder, tskinFile)
         
@@ -177,24 +180,34 @@ def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2'):
         bdotfile.close()
         tempfile.close()
         
+        temp = np.array(temp) -273.15
+
+        
         plt.figure()
-        gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1]) 
+        gs = gridspec.GridSpec(2, 1, height_ratios=[3, 2])
         for m in models:
-            
-            rfile = 'CFM'+e+"results"+m+".hdf5"
+            if rlist==experiments:
+                rfile = 'CFM'+e+"results"+m+".hdf5"
+            else:
+                rfile='CFM_'+e+'_results_'+m+'.hdf5'
         
             fn = os.path.join(rfolder,rfile)
-        
-            f = h5.File(fn,'r')
+            
+            try:
+                f = h5.File(fn,'r')
+            except:
+                continue
         
             # Plot resultsf rom spin run
             time = f['DIP'][1:,0]
             dip = f['DIP'][1:,1]
             
+            
             ax0 = plt.subplot(gs[0])
             ax0.plot(time,dip, c=modelColors[m], label=m)
-            ax0.legend()
-            
+            ax0.legend(fontsize=5)
+            ax0.set_ylabel('DIP [m]') #TODO: unit
+            plt.title('DIP, SMB and Temperature for '+e)
             
         ax2 = plt.subplot(gs[1])
         ax3 = ax2.twinx()
@@ -208,10 +221,61 @@ def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2'):
         ax3.tick_params(color='blue')
         ax3.set_ylabel('Surface mass balance [m/a]', color='blue')
         
-        
+
         plt.show()
+ 
+
+sites = ['site1', 'site2', 'site3']
+def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profileFolder='obsProfiles',sites = ['site1', 'site2', 'site3']):
+    plotAllFun(rfolder=rfolder, infolder=infolder, inSMB='smb_', inTemp='temp_', rlist=sites)
+    
+    for site in sites:
+        # observation profiles
+        if site == 'site1': 
+            sProfile='46Density.tsv'
+        elif site == 'site2':
+            sProfile='B26_2011_converted.csv'
+        elif site=='site3':
+            sProfile='NEEM2007shallowcoreDensity.txt'
+        else: sProfile=site
+        
+        profilePath = os.path.join(profileFolder, sProfile)
+        
+        obsProfile = pd.read_csv(profilePath)
+        
+        if len(obsProfile.columns)!=2:
+            obsProfile = pd.read_csv(profilePath, delimiter='\t')
+        
+        
+        obsDepth = obsProfile['Depth [m]']
+        obsDensity = obsProfile['Density [kg/m3]']
+        
+        plt.figure()
+        plt.gca().invert_yaxis()
+        plt.plot(obsDensity, obsDepth, label='Observation', c='pink')
+        
+        for m in models:
+            rfile='CFM_'+site+'_results_'+m+'.hdf5'
+        
+            fn = os.path.join(rfolder,rfile)
             
-            
+            try:
+                f = h5.File(fn,'r')
+            except:
+                continue
+        
+            # Plot resultsf rom spin run
+            modelDepth = f['depth'][-1,1:]
+            modelDensity = f['density'][-1,1:]
+
+            plt.plot(modelDensity,modelDepth, c=modelColors[m], label=m, linewidth=0.6)
+        
+        plt.legend(fontsize=8)
+        plt.ylabel('Depth [m]')
+        plt.xlabel('Density [kg/m3]')
+        plt.title(sProfile.replace('.csv', '').replace('.txt','').replace('.tsv','')+'\n Depth Density Profile' )
+        plt.show()
+    
             
 # =============================================================================
 #             plt.subplot(311)

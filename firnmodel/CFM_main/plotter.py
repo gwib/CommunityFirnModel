@@ -9,13 +9,13 @@ import pickle
 def plotter(rfolder,rfile):
 
     '''
-    Plot 's from the CFM
+    Plots from the CFM
     '''
     fn = os.path.join(rfolder,rfile)
 
     f = h5.File(fn,'r')
 
-    timesteps = f['depth'][1:,0]
+    timesteps = f['depth'][-1:,0]
 
     # with open('/Users/maxstev/Documents/Grad_School/Research/FIRN/GREENLAND_CVN/Data/CVN_DATA/core_data_dict.pkl','rb') as ff:
     #     d=pickle.load(ff)
@@ -24,9 +24,9 @@ def plotter(rfolder,rfile):
     # cdepth = d[core]['depth']/100
     # cdensity = d[core]['density']
 
-    depth = f['depth'][1:,1:]
-    density = f['density'][1:,1:]
-    temperature = f['temperature'][1:,1:]
+    depth = f['depth'][-1,1:]
+    density = f['density'][-1,1:]
+    temperature = f['temperature'][-1,1:]
     # air = f['gasses'][:,1:]
 
     jj=np.where(timesteps>=200.0)[0][0]
