@@ -1,6 +1,6 @@
+*.mat
 *.pyc
 *.nc
-*.mat
 
 .ipynb_checkpoints/
 
@@ -9,6 +9,10 @@ code/gasmodel/Results/conc_out.csv
 code/gasmodel/Results/ESS524_fig1.eps
 
 code/gasmodel/Results/ESS524_fig2.eps
+
+firnmodel/CFM_main/CFMex*
+firnmodel/CFM_main/input2-1
+firnmodel/CFM_main/setup*
 
 Clim.csv
 Dcon.csv
@@ -38,3 +42,27 @@ tempSpin.csv
 *.hdf5
 
 .spyproject/
+
+
+# Created by https://www.gitignore.io/api/microsoftoffice
+
+### MicrosoftOffice ###
+*.tmp
+
+# Word temporary
+~$*.doc*
+
+# Excel temporary
+~$*.xls*
+
+# Excel Backup File
+*.xlk
+
+# PowerPoint temporary
+~$*.ppt*
+
+# Visio autosave temporary files
+*.~vsd*
+
+
+# End of https://www.gitignore.io/api/microsoftoffice
