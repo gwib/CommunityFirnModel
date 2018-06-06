@@ -233,10 +233,13 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
         # observation profiles
         if site == 'site1': 
             sProfile='46Density.tsv'
+            obsTime = np.float32(2006.7454)
         elif site == 'site2':
-            sProfile='B26_2011_converted.csv'
+            sProfile='B26_2011.csv'
+            obsTime = np.float32(2011.8727)
         elif site=='site3':
             sProfile='NEEM2007shallowcoreDensity.txt'
+            obsTime = np.float32(2007.7709)
         else: sProfile=site
         
         profilePath = os.path.join(profileFolder, sProfile)
@@ -246,9 +249,10 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
         if len(obsProfile.columns)!=2:
             obsProfile = pd.read_csv(profilePath, delimiter='\t')
         
-        
         obsDepth = obsProfile['Depth [m]']
         obsDensity = obsProfile['Density [kg/m3]']
+        
+        maxObsDepth = np.float32(max(obsDepth))
         
         plt.figure()
         plt.gca().invert_yaxis()
@@ -264,11 +268,18 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
             except:
                 continue
         
-            # Plot resultsf rom spin run
-            modelDepth = f['depth'][-1,1:]
-            modelDensity = f['density'][-1,1:]
+            time = list(f['depth'][:,0])
+            
+            timeIndex = time.index(obsTime)
+            #timeIndex = -1
+            modelDepth = f['depth'][timeIndex,1:]
+            try:
+                depthIndex = np.where(modelDepth>=maxObsDepth)[0][0]
+            except: continue
+            
+            modelDensity = f['density'][timeIndex,1:]
 
-            plt.plot(modelDensity,modelDepth, c=modelColors[m], label=m, linewidth=0.6)
+            plt.plot(modelDensity[:depthIndex],modelDepth[:depthIndex], c=modelColors[m], label=m, linewidth=0.6)
         
         plt.legend(fontsize=8)
         plt.ylabel('Depth [m]')

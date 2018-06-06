@@ -28,7 +28,7 @@ def prepareObsAndModel(obsFile, modelFile):
     
     merge = pd.merge(modelProfile, obsProfile, on='Depth [m]', how='outer')
     merge = merge.sort_values('Depth [m]')
-    merge = merge.interpolate() # fill missing values by linear interpolation
+    merge = merge.interpolate(pad=3) # fill missing values by linear interpolation
     
     return merge
 
