@@ -9,6 +9,7 @@ Created on Fri May 18 11:14:50 2018
 # Script to run all models in parrallel
 import subprocess
 from plotDrhoDt import dip100
+import os
 
 experiments = ['exp'+str(x) for x in range(1,7)]
 models = ["Arthern2010S","HLdynamic","HLSigfus","Li2011","Helsen2008","Goujon2003","Barnola1991","KuipersMunneke2015","Crocus", 'Simonsen2013',"Arthern2010T",]#TODO: ,"Morris2014"
@@ -31,14 +32,9 @@ def generatePaperOutput15000():
             cmd = ['python', 'main.py', 'experimentSetups15000/'+e+'Setup_'+m+'.json']
             subprocess.Popen(cmd)
 
-def realExperiment():
+           
+def realExperiment2(setupFolder='setupInput2/'):
     for s in sites:
         for m in models:
-            cmd = ['python', 'main.py', 'setupInput2-1/'+s+'_Setup_'+m+'.json']
-            subprocess.Popen(cmd)
-            
-def realExperiment2():
-    for s in sites:
-        for m in models:
-            cmd = ['python', 'main.py', 'setupInput2/'+s+'_Setup_'+m+'.json']
+            cmd = ['python', 'main.py', os.path.join(setupFolder, s+'_Setup_'+m+'.json')]
             subprocess.Popen(cmd)

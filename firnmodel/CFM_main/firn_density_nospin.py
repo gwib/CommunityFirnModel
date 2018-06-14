@@ -211,7 +211,11 @@ class FirnDensityNoSpin:
                     self.rhos0      = np.random.normal(self.c['rhos0'], rho_stdv, self.stp)
                     self.rhos0[self.rhos0>600]=600
                     self.rhos0[self.rhos0<300]=300
-
+                
+                elif self.c['srho_type']=='reeh':
+                    T_f = (self.Ts - K_TO_C)
+                    self.rhos0 = 625.0 + 18.7*T_f + 0.293*T_f**2
+                    #print(self.rhos0)
             else:
                 self.rhos0      = self.c['rhos0'] * np.ones(self.stp)       # density at surface
 

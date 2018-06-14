@@ -147,7 +147,7 @@ def plotDIPForExperiments(rfolder = 'CFMexperiments', rlist=experiments):
             plt.show()
     
 
-def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTemp='tskin', rlist=experiments):
+def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTemp='tskin', rlist=experiments, filePath='CFMexperiments/plots/dipPlot'):
     for e in rlist:
         if rlist==experiments:
             if e in ['exp1', 'exp2', 'exp3']:
@@ -202,7 +202,6 @@ def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTem
             time = f['DIP'][1:,0]
             dip = f['DIP'][1:,1]
             
-            
             ax0 = plt.subplot(gs[0])
             ax0.plot(time,dip, c=modelColors[m], label=m)
             ax0.legend(fontsize=5)
@@ -223,24 +222,46 @@ def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTem
         
 
         plt.show()
+        
+        
+        if not os.path.exists(rfolder+'/plots'):
+            os.makedirs(rfolder+'/plots')
+        plt.savefig(filePath+'.png', bbox_inches='tight')
  
 
 sites = ['site1', 'site2', 'site3']
 def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profileFolder='obsProfiles',sites = ['site1', 'site2', 'site3']):
-    plotAllFun(rfolder=rfolder, infolder=infolder, inSMB='smb_', inTemp='temp_', rlist=sites)
     
     for site in sites:
         # observation profiles
-        if site == 'site1': 
-            sProfile='46Density.tsv'
-            obsTime = np.float32(2006.7454)
-        elif site == 'site2':
-            sProfile='B26_2011.csv'
-            obsTime = np.float32(2011.8727)
-        elif site=='site3':
-            sProfile='NEEM2007shallowcoreDensity.txt'
-            obsTime = np.float32(2007.7709)
-        else: sProfile=site
+        if infolder=='input2':
+            if site == 'site1': 
+                sProfile='46Density.tsv'
+                obsTime = np.float32(2006.5)
+            elif site == 'site2':
+                    sProfile='B26_2011.csv'
+                    obsTime = np.float32(2011.5)
+            elif site=='site3':
+                    sProfile='NEEM2007shallowcoreDensity.txt'
+                    obsTime = np.float32(2007.5)
+            else: sProfile=site
+        else:
+            if site == 'site1': 
+                sProfile='46Density.tsv'
+                obsTime = np.float32(2006.7454)
+            elif site == 'site2':
+                sProfile='B26_2011.csv'
+                obsTime = np.float32(2011.8727)
+            elif site=='site3':
+                sProfile='NEEM2007shallowcoreDensity.txt'
+                obsTime = np.float32(2007.7709)
+            else: sProfile=site
+        sProfileName = sProfile.replace('.csv', '').replace('.txt','').replace('.tsv','')
+            
+        # DIP-plot
+        plotAllFun(rfolder=rfolder, infolder=infolder, inSMB='smb_', inTemp='temp_', rlist=sites, filePath=rfolder+'/plots/'+sProfileName)
+    
+        
         
         profilePath = os.path.join(profileFolder, sProfile)
         
@@ -256,7 +277,7 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
         
         plt.figure()
         plt.gca().invert_yaxis()
-        plt.plot(obsDensity, obsDepth, label='Observation', c='pink')
+        plt.step(obsDensity, obsDepth, label='Observation', c='pink')
         
         for m in models:
             rfile='CFM_'+site+'_results_'+m+'.hdf5'
@@ -269,7 +290,7 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
                 continue
         
             time = list(f['depth'][:,0])
-            
+            #print(time)
             timeIndex = time.index(obsTime)
             #timeIndex = -1
             modelDepth = f['depth'][timeIndex,1:]
@@ -279,14 +300,24 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
             
             modelDensity = f['density'][timeIndex,1:]
 
-            plt.plot(modelDensity[:depthIndex],modelDepth[:depthIndex], c=modelColors[m], label=m, linewidth=0.6)
+            plt.step(modelDensity[:depthIndex],modelDepth[:depthIndex], c=modelColors[m], label=m, linewidth=0.6)
         
         plt.legend(fontsize=8)
         plt.ylabel('Depth [m]')
         plt.xlabel('Density [kg/m3]')
-        plt.title(sProfile.replace('.csv', '').replace('.txt','').replace('.tsv','')+'\n Depth Density Profile' )
+        plt.title(sProfileName+'\n Depth Density Profile' )
         plt.show()
+        if not os.path.exists(rfolder+'/plots'):
+            os.makedirs(rfolder+'/plots')
+        plt.savefig(rfolder+'/plots/ddp'+sProfileName+'.png', bbox_inches='tight')
     
+
+def dipTrend(rFolder, sites=sites):
+    return np.nan
+
+
+
+
             
 # =============================================================================
 #             plt.subplot(311)

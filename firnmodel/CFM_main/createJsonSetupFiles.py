@@ -142,13 +142,13 @@ def generate15000Input2File(siteName, modelname):
 
     
     data = {
-    "InputFileFolder": "input2-1",
+    "InputFileFolder": "input2",
     "InputFileNameTemp": tskinFile,
     "InputFileNamebdot": bDotFile,
-    "resultsFolder": "./CFMexperimentsInput2-inclControl",
+    "resultsFolder": "./CFMexperimentsInput2-inclMeltSrhoReeh",
     "physRho": modelname,
     #"_physRhoOptions":["HLdynamic","HLSigfus","Li2004","Li2011","Helsen2008","Arthern2010S","Arthern2010T","Spencer2001","Goujon2003","Barnola1991","Morris2014","KuipersMunneke2015","Crocus"],
-    "MELT": 0, #false
+    "MELT": 1,
     "FirnAir": 0, #false
     "TWriteInt": 1,
     "int_type": "nearest",
@@ -158,15 +158,16 @@ def generate15000Input2File(siteName, modelname):
     "physGrain": 1,
     "calcGrainSize": 0,
     "heatDiff": 1,
-    "variable_srho": 0,
-    "rhos0": 360.0,
+    "variable_srho": 1,
+    "srho_type": 'reeh',
+    "rhos0": 310.0,
     "r2s0": 1.0e-8,
     "AutoSpinUpTime": 0,#'false',
     "yearSpin": 15000,
     "stpsPerYearSpin": 1.0,
     "H": 3000,
     "HbaseSpin": 2750.0,
-    "stpsPerYear": 1.0,
+    "stpsPerYear": 12.0,
     "D_surf": 1.0,
     "GrGrowPhysics": "Arthern",
     "_GrGrowPhysics_options": ["Arthern", "Katsushima"],
@@ -188,7 +189,7 @@ def generate15000Input2File(siteName, modelname):
     }
 
 
-    with open('setupInput2-1/'+siteName+'_Setup_'+modelname+'.json', 'w') as outfile:
+    with open('setupInput2-inclMeltvarSrho/'+siteName+'_Setup_'+modelname+'.json', 'w') as outfile:
         #json.dumps(data, outfile, indent=4)
         outfile.write(json.dumps(data, indent=4))
  
