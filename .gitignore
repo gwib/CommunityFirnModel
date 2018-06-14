@@ -1,6 +1,7 @@
 *.mat
 *.pyc
 *.nc
+*.hdf5
 
 .ipynb_checkpoints/
 
@@ -10,7 +11,7 @@ code/gasmodel/Results/ESS524_fig1.eps
 
 code/gasmodel/Results/ESS524_fig2.eps
 
-firnmodel/CFM_main/CFMex*
+
 firnmodel/CFM_main/input2-1
 firnmodel/CFM_main/setup*
 
