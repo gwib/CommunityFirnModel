@@ -245,17 +245,17 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
                     sProfile='NEEM2007shallowcoreDensity.txt'
                     obsTime = np.float32(2007.5)
             else: sProfile=site
-        else:
-            if site == 'site1': 
-                sProfile='46Density.tsv'
-                obsTime = np.float32(2006.7454)
-            elif site == 'site2':
-                sProfile='B26_2011.csv'
-                obsTime = np.float32(2011.8727)
-            elif site=='site3':
-                sProfile='NEEM2007shallowcoreDensity.txt'
-                obsTime = np.float32(2007.7709)
-            else: sProfile=site
+#        else:
+#        if site == 'site1': 
+#            sProfile='46Density.tsv'
+#            obsTime = np.float32(2006.7454)
+#        elif site == 'site2':
+#            sProfile='B26_2011.csv'
+#            obsTime = np.float32(2011.8727)
+#        elif site=='site3':
+#            sProfile='NEEM2007shallowcoreDensity.txt'
+#            obsTime = np.float32(2007.7709)
+#        else: sProfile=site
         sProfileName = sProfile.replace('.csv', '').replace('.txt','').replace('.tsv','')
             
         # DIP-plot
