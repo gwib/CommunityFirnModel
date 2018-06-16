@@ -83,7 +83,7 @@ def dip100(rfolder,rfile):
     
     
 modelColors = {}
-models = ["HLdynamic","HLSigfus","Li2011","Helsen2008","Arthern2010S","Goujon2003","Barnola1991","KuipersMunneke2015",'Simonsen2013'] # TODO: "Crocus", ,"Arthern2010T","Spencer2001","Morris2014",
+models = ["HLdynamic","HLSigfus","Li2011","Helsen2008","Arthern2010S","Goujon2003","Barnola1991","KuipersMunneke2015",'Simonsen2013', 'Crocus', 'Arthern2010T'] # TODO: "Crocus", ,"Arthern2010T","Spencer2001","Morris2014",
 
 
 
@@ -128,7 +128,7 @@ def plotDIPForExperiments(rfolder = 'CFMexperiments', rlist=experiments):
     for e in rlist:
         plt.figure()
         for m in models:
-            rfile = 'CFM'+e+"results"+m+".hdf5"
+            rfile = 'CFM'+e+"results_"+m+".hdf5"
         
             fn = os.path.join(rfolder,rfile)
         
@@ -138,7 +138,7 @@ def plotDIPForExperiments(rfolder = 'CFMexperiments', rlist=experiments):
             time = f['DIP'][1:,0]
             dip = f['DIP'][1:,1]
             
-            plt.plot(time,dip, c=modelColors[m], label=m)
+            plt.plot(time,dip, label=m)#, c=modelColors[m])
         
             plt.title(e)
             plt.xlabel('Time')
@@ -259,7 +259,7 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
         sProfileName = sProfile.replace('.csv', '').replace('.txt','').replace('.tsv','')
             
         # DIP-plot
-        plotAllFun(rfolder=rfolder, infolder=infolder, inSMB='smb_', inTemp='temp_', rlist=sites, filePath=rfolder+'/plots/'+sProfileName)
+        plotAllFun(rfolder=rfolder, infolder=infolder, inSMB='smb_', inTemp='temp_', rlist=[site], filePath=rfolder+'/plots/'+sProfileName)
     
         
         

@@ -25,43 +25,43 @@ class FirnDensityNoSpin:
     '''
     Parameters used in the model, for the initialization as well as the time evolution:
 
-    : gridLen: size of grid used in the model run
-                (unit: number of boxes, type: int)
-    : dx: vector of width of each box, used for stress calculations
-                (unit: m, type: array of ints)
-    : dt: number of seconds per time step
-                (unit: seconds, type: float)
-    : t: number of years per time step
-                (unit: years, type: float)
-    : modeltime: linearly spaced time vector from indicated start year to indicated end year
-                (unit: years, type: array of floats)
-    : years: total number of years in the model run
-                (unit: years, type: float)
-    : stp: total number of steps in the model run
-                (unit: number of steps, type: int)
-    : T_mean: interpolated temperature vector based on the model time and the initial user temperature data
-                (unit: ???, type: array of floats)
-    : Ts: interpolated temperature vector based on the model time & the initial user temperature data
-                may have a seasonal signal imposed depending on number of years per time step (< 1)
-                (unit: ???, type: array of floats)
-    : bdot: bdot is meters of ice equivalent/year. multiply by 0.917 for W.E. or 917.0 for kg/year
-                (unit: ???, type: )
-    : bdotSec: accumulation rate vector at each time step
-                (unit: ???, type: array of floats)
-    : rhos0: surface accumulate rate vector
-                (unit: ???, type: array of floats)
-    : bdot_mean: mean accumulation over the lifetime of each parcel
-                (units are m I.E. per year)
-    :returns D_surf: diffusivity tracker
-                (unit: ???, type: array of floats)
-
-    '''
++    : gridLen: size of grid used in the model run
++                (unit: number of boxes, type: int)
++    : dx: vector of width of each box, used for stress calculations
++                (unit: m, type: array of ints)
++    : dt: number of seconds per time step
++                (unit: seconds, type: float)
++    : t: number of years per time step
++                (unit: years, type: float)
++    : modeltime: linearly spaced time vector from indicated start year to indicated end year
++                (unit: years, type: array of floats)
++    : years: total number of years in the model run
++                (unit: years, type: float)
++    : stp: total number of steps in the model run
++                (unit: number of steps, type: int)
++    : T_mean: interpolated temperature vector based on the model time and the initial user temperature data
++                (unit: ???, type: array of floats)
++    : Ts: interpolated temperature vector based on the model time & the initial user temperature data
++                may have a seasonal signal imposed depending on number of years per time step (< 1)
++                (unit: ???, type: array of floats)
++    : bdot: bdot is meters of ice equivalent/year. multiply by 0.917 for W.E. or 917.0 for kg/year
++                (unit: ???, type: )
++    : bdotSec: accumulation rate vector at each time step
++                (unit: ???, type: array of floats)
++    : rhos0: surface accumulate rate vector
++                (unit: ???, type: array of floats)
++    : bdot_mean: mean accumulation over the lifetime of each parcel
++                (units are m I.E. per year)
++    :returns D_surf: diffusivity tracker
++                (unit: ???, type: array of floats)
++
++    '''
 
     def __init__(self, configName):
         '''
-        Sets up the initial spatial grid, time grid, accumulation rate, age, density, mass, stress, temperature, and diffusivity of the model run
-        :param configName: name of json config file containing model configurations
-        '''
++        Sets up the initial spatial grid, time grid, accumulation rate, age, density, mass, stress, temperature, and diffusivity of the model run
++        :param configName: name of json config file containing model configurations
++        '''
         ### load in json config file and parses the user inputs to a dictionary
         self.spin = True
         with open(configName, "r") as f:
@@ -150,7 +150,6 @@ class FirnDensityNoSpin:
         int_type            = self.c['int_type']
         print('Climate interpolation method is %s' %int_type)
 
-
         ### Temperature #####        
         Tsf                 = interpolate.interp1d(input_year_temp,input_temp,int_type,fill_value='extrapolate') # interpolation function
         self.Ts             = Tsf(self.modeltime) # surface temperature interpolated to model time
@@ -159,7 +158,8 @@ class FirnDensityNoSpin:
             # self.Ts         = self.Ts + self.c['TAmp'] * (np.cos(2 * np.pi * np.linspace(0, self.years, self.stp)) + 0.3 * np.cos(4 * np.pi * np.linspace(0, self.years, self.stp))) # Orsi
             self.Ts         = self.Ts - self.c['TAmp'] * (np.cos(2 * np.pi * np.linspace(0, self.years, self.stp))) # This is basic for Greenland (for Antarctica the it should be a plus instead of minus)
         #####################
-
+        
+        
         ### Accumulation ####
         bsf                 = interpolate.interp1d(input_year_bdot,input_bdot,int_type,fill_value='extrapolate') # interpolation function
         self.bdot             = bsf(self.modeltime)
@@ -197,7 +197,7 @@ class FirnDensityNoSpin:
                 #impose seasonal isotope cycle
                 # self.del_s     = self.del_s + 5 * (np.cos(2 * np.pi * np.linspace(0, self.years, self.stp )) + 0.3 * np.cos(4 * np.pi * np.linspace(0, self.years, self.stp )))
         #####################
- 
+        
          ### Surface Density #
         try:
             if bool(self.c['variable_srho']):
@@ -205,17 +205,18 @@ class FirnDensityNoSpin:
                     input_srho, input_year_srho = read_input(self.c['InputFileNamesrho'])
                     self.rhos0      = np.interp(self.modeltime, input_year_srho, input_srho)
                 elif self.c['srho_type']=='param':
+                    print('srho_type is param')
                     self.rhos0        = 481.0 + 4.834 * (self.Ts - T_MELT) # Kuipers Munneke, 2015
                 elif self.c['srho_type']=='noise':
                     rho_stdv         = 100 # the standard deviation of the surface density (I made up 25)
                     self.rhos0      = np.random.normal(self.c['rhos0'], rho_stdv, self.stp)
                     self.rhos0[self.rhos0>600]=600
                     self.rhos0[self.rhos0<300]=300
-                
                 elif self.c['srho_type']=='reeh':
-                    T_f = (self.Ts - K_TO_C)
-                    self.rhos0 = 625.0 + 18.7*T_f + 0.293*T_f**2
-                    #print(self.rhos0)
+                    print('srho_type is reeh')
+                    T_f1 = (self.Ts - T_MELT)
+                    self.rhos0 = 625.0 + (18.7*T_f1) + (0.293*(T_f1**2))
+
             else:
                 self.rhos0      = self.c['rhos0'] * np.ones(self.stp)       # density at surface
 
@@ -409,9 +410,9 @@ class FirnDensityNoSpin:
 
     def time_evolve(self):
         '''
-        Evolve the spatial grid, time grid, accumulation rate, age, density, mass, stress, temperature, and diffusivity through time
-        based on the user specified number of timesteps in the model run. Updates the firn density using a user specified 
-        '''
++        Evolve the spatial grid, time grid, accumulation rate, age, density, mass, stress, temperature, and diffusivity through time
++        based on the user specified number of timesteps in the model run. Updates the firn density using a user specified 
++        '''
         self.steps = 1 / self.t # steps per year
         start_time=time.time() # this is a timer to keep track of how long the model run takes.
         
@@ -659,7 +660,7 @@ class FirnDensityNoSpin:
                         tdep = np.where(self.gridtrack==1)[0][-1]
                         print('transition at:', self.z[tdep])
 
-        ##################################
+        #################################
         ##### END TIME-STEPPING LOOP #####
         ##################################
 
@@ -671,8 +672,8 @@ class FirnDensityNoSpin:
 
     def update_BCO(self):
         '''
-        Updates the bubble close-off depth and age based on the Martinerie criteria as well as through assuming the critical density is 815 kg/m^3
-        '''
++        Updates the bubble close-off depth and age based on the Martinerie criteria as well as through assuming the critical density is 815 kg/m^3
++        '''
         try:
             bcoMartRho     = 1 / (1 / (917.0) + self.T10m * 6.95E-7 - 4.3e-5)  # Martinerie density at close off; see Buizert thesis (2011), Blunier & Schwander (2000), Goujon (2003)
             bcoAgeMart     = min(self.age[self.rho >= bcoMartRho]) / S_PER_YEAR  # close-off age from Martinerie
@@ -748,6 +749,3 @@ class FirnDensityNoSpin:
         # self.dHOutC.append(self.dHtot)
 
         return self.dH, self.dHtot
-
-    ###########################
-
