@@ -6,7 +6,7 @@ Created on Fri May 18 11:14:50 2018
 @author: GalinaJonat
 """
 
-# Script to run all models in parrallel
+# Script to run all models in parallel
 import subprocess
 from plotDrhoDt import dip100
 import os
@@ -33,7 +33,7 @@ def generatePaperOutput15000():
             subprocess.Popen(cmd)
 
            
-def realExperiment2(setupFolder='setupInput2/'):
+def realExperiment2(setupFolder='setupInput2/', sites=sites):
     for s in sites:
         for m in models:
             cmd = ['python', 'main.py', os.path.join(setupFolder, s+'_Setup_'+m+'.json')]

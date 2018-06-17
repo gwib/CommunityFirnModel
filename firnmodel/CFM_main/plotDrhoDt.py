@@ -7,6 +7,7 @@ import pickle
 import csv
 import matplotlib.gridspec as gridspec
 import pandas as pd
+from dipTrend import findDIPtrend
 
 def densityPlotSpin(rfolder,rfile):
 
@@ -80,6 +81,8 @@ def dip100(rfolder,rfile):
     plt.xlabel('Time')
     plt.ylabel('DIP')
     plt.show()
+    
+    return time, dip
     
     
 modelColors = {}
@@ -310,11 +313,6 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
         if not os.path.exists(rfolder+'/plots'):
             os.makedirs(rfolder+'/plots')
         plt.savefig(rfolder+'/plots/ddp'+sProfileName+'.png', bbox_inches='tight')
-    
-
-def dipTrend(rFolder, sites=sites):
-    return np.nan
-
 
 
 
