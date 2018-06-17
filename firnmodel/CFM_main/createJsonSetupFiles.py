@@ -281,5 +281,5 @@ def generateSetupFilesInput2():
 def generateAutoRunFiles(siteIndex):
     siteName = str(siteIndex)
     for m in models:
-        generateAutoRunFiles(siteName,m)
+        generateAutoRunFile(siteName,m)
     

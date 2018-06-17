@@ -42,6 +42,5 @@ csvwrite(smbFileName,smbs);
 
 lat = info_lat(inIndex);
 lon = info_lon(inIndex);
-
 end
 
