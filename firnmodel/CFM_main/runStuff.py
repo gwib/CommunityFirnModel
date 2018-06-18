@@ -10,6 +10,7 @@ Created on Fri May 18 11:14:50 2018
 import subprocess
 from plotDrhoDt import dip100
 import os
+from threading import Thread
 
 experiments = ['exp'+str(x) for x in range(1,7)]
 models = ["Arthern2010S","HLdynamic","HLSigfus","Li2011","Helsen2008","Goujon2003","Barnola1991","KuipersMunneke2015","Crocus", 'Simonsen2013',"Arthern2010T",]#TODO: ,"Morris2014"
@@ -32,9 +33,20 @@ def generatePaperOutput15000():
             cmd = ['python', 'main.py', 'experimentSetups15000/'+e+'Setup_'+m+'.json']
             subprocess.Popen(cmd)
 
-           
+def call_script(*arg):
+    subprocess.check_call(arg)           
+
+
 def realExperiment2(setupFolder='setupInput2/', sites=sites):
+    t = {}
     for s in sites:
         for m in models:
             cmd = ['python', 'main.py', os.path.join(setupFolder, s+'_Setup_'+m+'.json')]
-            subprocess.Popen(cmd)
+            #subprocess.Popen(cmd)
+            if subprocess.call(cmd) == 0:
+                continue
+            
+#            t[s+m] = Thread(target=call_script, args=cmd)
+#            t[s+m].start()
+#        for m in models:
+#            t[s+m].join()

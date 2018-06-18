@@ -34,9 +34,9 @@ for year=icesatyears
 end
 
 idx = int2str(inIndex);
-folder = '../CFM_main/extractedData/';
-tempFileName = strcat(folder,'temp_',idx,'.dat');
-smbFileName = strcat(folder,'smb_',idx,'.dat');
+folder = '../CFM_main/autoRunInput/';
+tempFileName = strcat(folder,'temp_',idx,'.csv');
+smbFileName = strcat(folder,'smb_',idx,'.csv');
 csvwrite(tempFileName,temps);
 csvwrite(smbFileName,smbs);
 

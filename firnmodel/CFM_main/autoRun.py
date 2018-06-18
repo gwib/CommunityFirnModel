@@ -9,6 +9,7 @@ import random
 import matlab.engine
 from dipTrend import dipTrendToCSV
 import pickle
+import time
 
 def runAuto():
     
@@ -25,21 +26,20 @@ def runAuto():
     
     for i in indices:
         print(i)
-        eng = matlab.engine.start_matlab()
-        lat, lon = eng.extractData2(i,nargout=2)
-        coords = [lat, lon]
-        eng.quit()
-        
-        
-        generateAutoRunFiles(i)
+        istr = str(i)
+        if not os.path.isfile('./setupAuto'+istr+'_Setup_Goujon2003.json'):
+            coords = runMatlab(i)
+            generateAutoRunFiles(i)
         realExperiment2(setupFolder='setupAuto', sites=[str(i)])
+        
         dipTrendToCSV(str(i),coords)
 
 def runMatlab(i):
     eng = matlab.engine.start_matlab()
     lat,lon = eng.extractData2(i,nargout=2)
     eng.quit()
-    return lat,lon
+    coords = [lat, lon]
+    return coords
     
     
     #todo: try this:
