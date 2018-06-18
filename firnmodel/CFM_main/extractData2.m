@@ -27,7 +27,8 @@ for year=icesatyears
     y = num2str(year);
     tempYear = temp(y);
     smbYear = smb(y);
-    yearIndex = max(icesatyears)-year+1;
+    yearIndex = numel(icesatyears) - (max(icesatyears) - year);
+    disp(yearIndex)
 
     temps(:,yearIndex) = [year tempYear(inIndex,:)];
     smbs(:,yearIndex) = [year smbYear(inIndex,:)];

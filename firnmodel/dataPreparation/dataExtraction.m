@@ -72,6 +72,7 @@ for year=years
     tempYear = temp(y);
     smbYear = smb(y);
     yearIndex = years(numel(years))-year+1;
+    disp(yearIndex)
     for name=siteNames
         siteName = char(name);
         siteI = siteIndex(siteName);
