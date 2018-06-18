@@ -71,7 +71,7 @@ for year=years
     y = num2str(year);
     tempYear = temp(y);
     smbYear = smb(y);
-    yearIndex = years(numel(years))-year+1;
+    yearIndex = numel(years) - (max(years) - year);
     disp(yearIndex)
     for name=siteNames
         siteName = char(name);
