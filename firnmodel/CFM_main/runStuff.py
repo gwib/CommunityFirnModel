@@ -34,7 +34,7 @@ def generatePaperOutput15000():
             subprocess.Popen(cmd)
 
 def call_script(*arg):
-    subprocess.check_call(arg)           
+    subprocess.call(arg)           
 
 
 def realExperiment2(setupFolder='setupInput2/', sites=sites):
@@ -43,10 +43,9 @@ def realExperiment2(setupFolder='setupInput2/', sites=sites):
         for m in models:
             cmd = ['python', 'main.py', os.path.join(setupFolder, s+'_Setup_'+m+'.json')]
             #subprocess.Popen(cmd)
-            if subprocess.call(cmd) == 0:
-                continue
+            #subprocess.call(cmd)
             
-#            t[s+m] = Thread(target=call_script, args=cmd)
-#            t[s+m].start()
-#        for m in models:
-#            t[s+m].join()
+            t[s+m] = Thread(target=call_script, args=cmd)
+            t[s+m].start()
+        for m in models:
+            t[s+m].join(timeout=3600)

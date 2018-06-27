@@ -148,6 +148,7 @@ def plotDIPForExperiments(rfolder = 'CFMexperiments', rlist=experiments):
             plt.ylabel('DIP')
             plt.legend()
             plt.show()
+
     
 
 def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTemp='tskin', rlist=experiments, filePath='CFMexperiments/plots/dipPlot'):

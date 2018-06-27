@@ -54,15 +54,14 @@ def dipTrendToFile(site, coords):
             
         hf.close()
         
-def dipTrendToCSV(site, coords,csvName='diptrendsAuto'):
+def dipTrendToCSV(site, coords,csvName='diptrendsAuto', rfolder = 'CFMexperimentsInput2'):
     
     # always there: models
     models = ["HLdynamic","HLSigfus","Li2011","Helsen2008","Arthern2010S","Goujon2003","Barnola1991","KuipersMunneke2015","Simonsen2013", "Crocus","Arthern2010T"] 
-    
+    #csvName = csvName+'_'+site
     diptrendModels = [np.nan]*(len(models))
     
     for m in models:
-        rfolder = 'CFMexperimentsInput2'
         rfile='CFM_'+site+'_results_'+m+'.hdf5'
                 
         fn = os.path.join(rfolder,rfile)
@@ -79,7 +78,7 @@ def dipTrendToCSV(site, coords,csvName='diptrendsAuto'):
 
     coords.extend(diptrendModels)
     
-    with open('./CFMauto/'+csvName+'.csv', 'a') as f:
+    with open(os.path.join(rfolder, csvName+'.csv'), 'a') as f:
         writer = csv.writer(f)
         writer.writerow(coords)
     

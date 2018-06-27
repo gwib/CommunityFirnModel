@@ -27,7 +27,7 @@ def runAuto():
     for i in indices:
         print(i)
         istr = str(i)
-        if not os.path.isfile('./setupAuto'+istr+'_Setup_Goujon2003.json'):
+        if not os.path.isfile('./setupAuto/'+istr+'_Setup_Goujon2003.json'):
             coords = runMatlab(i)
             generateAutoRunFiles(i)
         realExperiment2(setupFolder='setupAuto', sites=[str(i)])
@@ -40,12 +40,25 @@ def runMatlab(i):
     eng.quit()
     coords = [lat, lon]
     return coords
-    
-    
-    #todo: try this:
-    #from mlabwrap import mlab
-    #mlab.myFunction('testadaptor', './', 'image.png')
 
+
+def dipFromProcessedSites():
+    indices1 = np.random.randint(1,50078, size=50078)
+    indexSet = set(indices1)
+    indices1 = random.sample(indexSet, len(indexSet))
+        
+    indices = [int(i) for i in indices1]
+    
+    for i in indices:
+        istr = str(i)
+        
+        if os.path.isfile('./CFMauto/CFM_'+istr+'_results_HLdynamic.hdf5'):
+            coords = runMatlab(i)
+            print(i)
+            print(coords)
+            dipTrendToCSV(str(i),coords,rfolder='CFMauto')
+        else:
+            continue
 
 # get temp and smb from matlab
 
