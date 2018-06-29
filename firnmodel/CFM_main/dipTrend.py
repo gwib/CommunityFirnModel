@@ -54,7 +54,7 @@ def dipTrendToFile(site, coords):
             
         hf.close()
         
-def dipTrendToCSV(site, coords,csvName='diptrendsAuto', rfolder = 'CFMexperimentsInput2'):
+def dipTrendToCSV(site, coords,csvName='diptrendsAuto', rfolder = 'CFMauto'):
     
     # always there: models
     models = ["HLdynamic","HLSigfus","Li2011","Helsen2008","Arthern2010S","Goujon2003","Barnola1991","KuipersMunneke2015","Simonsen2013", "Crocus","Arthern2010T"] 

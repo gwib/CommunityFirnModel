@@ -23,7 +23,6 @@ def runAuto():
         indices1 = random.sample(indexSet, len(indexSet))
         
     indices = [int(i) for i in indices1]
-    
     for i in indices:
         print(i)
         istr = str(i)

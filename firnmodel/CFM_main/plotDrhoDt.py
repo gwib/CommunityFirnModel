@@ -40,55 +40,14 @@ def densityPlotSpin(rfolder,rfile):
     plt.ylabel('Density')
     plt.show()
 
-
-
-
-# plot DIP in the first 100 years in the "official run"
-def dip100(rfolder,rfile):
-    
-    fn = os.path.join(rfolder,rfile)
-
-    f = h5.File(fn,'r')
-
-    # Plot resultsf rom spin run
-    time = f['DIP'][1:,0]
-    dip = f['DIP'][1:,1]
-    
-    first = 100#int(len(dip)/3)
-
-# =============================================================================
-#     depth = f['depth'][1:,1:]
-#     density = f['density'][1:,1:]
-#     temperature = f['temperature'][1:,1:]
-#     # air = f['gasses'][:,1:]
-# =============================================================================
-
-    # tim-density plot
-    plt.figure()
-    plt.plot(time[:first],dip[:first])
-    plt.title(rfile.replace('.hdf5', '')+'\n DIP evolvement for the first '+ str(first)+ ' iterations')
-    #TODO: insert units
-    plt.xlabel('time []')
-    plt.ylabel('DIP [«]')
-    plt.show()
-    
-    
-    f2 = plt.figure()
-    ax2 = f2.add_subplot(111)
-    plt.plot(time,dip)
-    plt.title(rfile.replace('.hdf5', '')+'\nDIP evolvement for the whole period')
-    #TODO: insert units
-    plt.xlabel('Time')
-    plt.ylabel('DIP')
-    plt.show()
-    
-    return time, dip
-    
     
 modelColors = {}
 models = ["HLdynamic","HLSigfus","Li2011","Helsen2008","Arthern2010S","Goujon2003","Barnola1991","KuipersMunneke2015",'Simonsen2013', 'Crocus', 'Arthern2010T'] # TODO: "Crocus", ,"Arthern2010T","Spencer2001","Morris2014",
-
-
+mshort = ["HLd", "HLs", "ZwallyLi", "HEL", "ARTs", "GOU", "BAR", "KM", "SIM", "CRO", "ARTt"]
+mwocro = ["HLdynamic","HLSigfus","Li2011","Helsen2008","Arthern2010S","Goujon2003","Barnola1991","KuipersMunneke2015",'Simonsen2013', 'Arthern2010T']
+mnames = {}
+for i in range(len(models)):
+    mnames[models[i]] = mshort[i]
 
 import random
 
@@ -126,28 +85,40 @@ for m in models:
     
 experiments = ['exp'+str(x) for x in range(1,7)]
 
-def plotDIPForExperiments(rfolder = 'CFMexperiments', rlist=experiments):
+def plotDIPForExperiments(rfolder = 'CFMexperiments15000', rlist=experiments, inclCro=True):
+    if inclCro: models1 = models
+    else: models1= mwocro
+    
     
     for e in rlist:
         plt.figure()
-        for m in models:
-            rfile = 'CFM'+e+"results_"+m+".hdf5"
+        for m in models1:
+            rfile = 'CFM'+e+"results"+m+".hdf5"
         
             fn = os.path.join(rfolder,rfile)
         
-            f = h5.File(fn,'r')
+            try:
+                f = h5.File(fn,'r')
+            except:
+                continue
         
             # Plot resultsf rom spin run
             time = f['DIP'][1:,0]
             dip = f['DIP'][1:,1]
             
-            plt.plot(time,dip, label=m)#, c=modelColors[m])
+            plt.plot(time,dip, label=mnames[m],c=modelColors[m])#, c=modelColors[m])
         
             plt.title(e)
             plt.xlabel('Time')
             plt.ylabel('DIP')
             plt.legend()
             plt.show()
+            
+        filePath = os.path.join(rfolder,'plots')
+        if not os.path.exists(filePath):
+            os.makedirs(filePath)
+        if inclCro: plt.savefig(filePath+'/'+e+'.png', bbox_inches='tight')
+        else: plt.savefig(filePath+'/'+e+'_woCrocus.png', bbox_inches='tight')
 
     
 
@@ -207,7 +178,7 @@ def plotAllFun(rfolder='CFMexperiments', infolder='CFMexp2', inSMB='bDot', inTem
             dip = f['DIP'][1:,1]
             
             ax0 = plt.subplot(gs[0])
-            ax0.plot(time,dip, c=modelColors[m], label=m)
+            ax0.plot(time,dip, c=modelColors[m], label=mnames[m])
             ax0.legend(fontsize=5)
             ax0.set_ylabel('DIP [m]') #TODO: unit
             plt.title('DIP, SMB and Temperature for '+e)
@@ -304,7 +275,7 @@ def plotDrhoDtForSites(infolder='input2',rfolder='CFMexperimentsInput2', profile
             
             modelDensity = f['density'][timeIndex,1:]
 
-            plt.step(modelDensity[:depthIndex],modelDepth[:depthIndex], c=modelColors[m], label=m, linewidth=0.6)
+            plt.step(modelDensity[:depthIndex],modelDepth[:depthIndex], c=modelColors[m], label=mnames[m], linewidth=0.6)
         
         plt.legend(fontsize=8)
         plt.ylabel('Depth [m]')
