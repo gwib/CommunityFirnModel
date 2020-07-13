@@ -19,8 +19,8 @@ firnmodel/*experiment*
 firnmodel/CFM_main/autoRunInput
 firnmodel/dataPreparation/weatherInput
 firnmodel/CFM_main/input2
-firnmodel/CFM_mail/obsProfiles
-firnmodel/CFM_main/setupInput2
+firnmodel/CFM_main/obsProfiles
+firnmodel/CFM_main/experiment*
 
 Clim.csv
 Dcon.csv
