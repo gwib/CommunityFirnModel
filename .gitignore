@@ -15,8 +15,12 @@ code/gasmodel/Results/ESS524_fig2.eps
 
 firnmodel/CFM_main/input2-1
 firnmodel/CFM_main/setup*
-firnmodel/experiment*
-firnmodel/CFM_main/autoRunInput/*
+firnmodel/*experiment*
+firnmodel/CFM_main/autoRunInput
+firnmodel/dataPreparation/weatherInput
+firnmodel/CFM_main/input2
+firnmodel/CFM_mail/obsProfiles
+firnmodel/CFM_main/setupInput2
 
 Clim.csv
 Dcon.csv
